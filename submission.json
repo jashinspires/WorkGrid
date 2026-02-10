@@ -1,6 +1,6 @@
 {
-  "backendUrl": "http://localhost:5000",
-  "frontendUrl": "http://localhost:3000",
+  "backendUrl": "https://multi-tenant-saas-backend-w6hg.onrender.com",
+  "frontendUrl": "https://multi-tenant-saas-i6o12el6e-kondiumavaralakshmis-projects.vercel.app",
   "demoVideoUrl": "",
   "testCredentials": {
     "superAdmin": {
@@ -45,5 +45,5 @@
       }
     ]
   },
-  "comments": "Project runs locally via Docker Compose. All 19 API endpoints verification script included: test-all-apis.ps1. Architecture diagram and enhanced research docs included."
+  "comments": "Project runs live on Render (Backend) and Vercel (Frontend). All API endpoints verified. Documentation includes system architecture and detailed research."
 }

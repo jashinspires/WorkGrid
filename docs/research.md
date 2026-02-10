@@ -98,12 +98,18 @@ Multi-tenancy is a software architecture where a single instance of an applicati
 5. **Development Speed:** Faster to implement and test with single schema
 6. **Scalability Path:** Can migrate high-value tenants to separate DBs later if needed
 
-**Risk Mitigation:**
-- Implement comprehensive tenant isolation testing
-- Add database-level row-level security policies
-- Use query timeouts and connection limits
-- Monitor per-tenant resource usage
-- Plan for tenant migration strategy if needed
+### 1.4 Scalability Benchmarking (Theoretical)
+
+For a shared-schema multi-tenant system, we anticipate the following performance profile based on our indexing strategy:
+
+| Metric | 10 Tenants | 100 Tenants | 1,000 Tenants | 10,000 Tenants |
+|--------|------------|-------------|---------------|----------------|
+| Query Latency (p95) | 12ms | 15ms | 22ms | 45ms |
+| Memory Usage | 256MB | 512MB | 2GB | 8GB (Partitioning Req) |
+| Connection Pool | 5 | 15 | 50 | 150 (PGBouncer Req) |
+
+**Analysis:**
+Our current B-Tree indexing on `tenant_id` ensures constant time lookup ($O(\log N)$) for individual tenant slices. However, once the table size exceeds the available RAM for index storage, we must implement **PostgreSQL Declarative Partitioning** to maintain performance.
 
 ---
 
@@ -319,9 +325,21 @@ CREATE POLICY tenant_isolation ON projects
 - Permission changes
 - Tenant configuration changes
 
+### 3.6 Threat Modeling using STRIDE
+
+We applied the STRIDE methodology to identify and mitigate platform-specific risks:
+
+| Threat | Definition | Mitigation in our Platform |
+|--------|------------|----------------------------|
+| **Spoofing** | Pretending to be someone else | Strict JWT validation with HMAC-SHA256 and unique `user_id` |
+| **Tampering** | Modifying data in transit | TLS 1.3 encryption (HTTPS) for all API traffic |
+| **Repudiation** | Denying an action performed | Comprehensive Audit Logs tracking every state change |
+| **Information Disclosure** | Data leak to other tenants | Middleware-level `tenant_id` extraction and mandatory filtering |
+| **Denial of Service** | Resource exhaustion | IP-based rate limiting and subscription-level entity limits |
+| **Elevation of Privilege** | Gaining admin access | RBAC middleware verifying `user.role` before sensitive endpoints |
+
 ---
 
-## 4. Scalability Considerations
 
 ### 4.1 Horizontal Scaling Strategy
 
