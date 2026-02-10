@@ -10,15 +10,40 @@ The Multi-Tenant SaaS Platform follows a three-tier architecture pattern with cl
 
 ### System Architecture Diagram
 
-![System Architecture](images/system-architecture.png)
+```mermaid
+graph TD
+    subgraph "Client Layer (Frontend)"
+        A["React SPA (Port 3000)"]
+    end
+
+    subgraph "Application Layer (Backend)"
+        B["Express API (Port 5000)"]
+        C["JWT Middleware"]
+        D["Authorize Middleware (RBAC)"]
+        E["Tenant Isolation Logic"]
+    end
+
+    subgraph "Data Layer (Database)"
+        F[("PostgreSQL 15")]
+    end
+
+    A -- "REST API (HTTP/JSON)" --> B
+    B --> C
+    C --> D
+    D --> E
+    E -- "tenant_id filtering" --> F
+
+    style A fill:#e1f5fe,stroke:#01579b
+    style B fill:#f3e5f5,stroke:#4a148c
+    style F fill:#e8f5e9,stroke:#1b5e20
+```
 
 The diagram above illustrates the complete system architecture including:
 - Client-to-server communication flow (HTTPS)
-- Load balancing and horizontal scaling
-- Multiple backend API servers in Docker containers
 - Middleware layers for authentication, authorization, and tenant isolation
 - Database connection with tenant_id filtering
 - Security mechanisms (JWT, bcrypt, TLS)
+
 
 ---
 
