@@ -20,11 +20,11 @@ During this project, I learned a lot of things that were totally new to me:
 
 ## 🏗️ How it's Built
 The app follows a 3-tier structure:
-1.  **Frontend**: A React single-page app that looks clean and professional.
-2.  **Backend**: A Node.js API that handles all the business logic and security.
-3.  **Database**: A Postgres instance that keeps everything organized.
+23: 1.  **Frontend**: A React single-page app that looks clean and professional.
+24: 2.  **Backend**: A Node.js API that handles all the business logic and security.
+25: 3.  **Database**: A Postgres instance that keeps everything organized.
 
-Check out the [Architecture Diagram](docs/images/system-architecture.png) in the docs folder for a visual look!
+Check out the [Architecture Diagram](docs/architecture.md) in the docs folder for a visual look!
 
 ## 🚀 How to Run it Yourself
 I've made it super easy to get started with Docker:
@@ -56,6 +56,11 @@ It tests everything from logging in to creating projects and tasks.
 I've included more details if you're interested:
 - [API Documentation](docs/API.md) - Every endpoint explained.
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - How to put this in the cloud.
-- [Technical Spec](docs/technical-spec.md) - How I handled the tricky parts.
+- [Research Document](docs/research.md) - **(Enhanced with Scalability & Threat Modeling)**
+- [Architecture](docs/architecture.md) - **(New Mermaid Diagram added)**
+
+## 🔗 Live Demo
+- **Frontend URL**: [https://multi-tenant-saas-i6o12el6e-kondiumavaralakshmis-projects.vercel.app](https://multi-tenant-saas-i6o12el6e-kondiumavaralakshmis-projects.vercel.app)
+- **Backend API**: [https://multi-tenant-saas-backend-w6hg.onrender.com](https://multi-tenant-saas-backend-w6hg.onrender.com)
 
 Hope you like it! It was a great learning experience. 🎓
