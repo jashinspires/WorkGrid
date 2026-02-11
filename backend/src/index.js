@@ -10,6 +10,16 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Root Route - Friendly welcome message
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Multi-Tenant SaaS API is running!',
+    version: '1.0.0',
+    documentation: '/docs',
+    healthCheck: '/api/health'
+  });
+});
+
 // Health Check (Mandatory requirement)
 app.get('/api/health', async (req, res) => {
   try {
