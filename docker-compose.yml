@@ -1,4 +1,4 @@
-# Docker Compose for multi-tenant SaaS platform
+# Docker Compose for WorkGrid platform
 
 version: '3.8'
 services:
@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password123
     ports:
-      - "5432:5432"
+      - "5955:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./database:/docker-entrypoint-initdb.d

@@ -10,9 +10,10 @@ const PLAN_LIMITS = {
 };
 
 exports.registerTenant = async (req, res) => {
-  const { tenantName, subdomain, adminEmail, adminPassword, adminFullName, plan = 'free' } = req.body;
+  const { tenantName, subdomain, adminEmail, adminPassword, adminFullName, adminName, plan = 'free' } = req.body;
+  const resolvedAdminName = adminFullName || adminName;
 
-  if (!tenantName || !subdomain || !adminEmail || !adminPassword || !adminFullName) {
+  if (!tenantName || !subdomain || !adminEmail || !adminPassword || !resolvedAdminName) {
     return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
 
@@ -45,7 +46,7 @@ exports.registerTenant = async (req, res) => {
     const userInsert = await client.query(
       `INSERT INTO users (tenant_id, email, password_hash, full_name, role)
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [tenant.id, adminEmail.toLowerCase(), passwordHash, adminFullName, 'tenant_admin']
+      [tenant.id, adminEmail.toLowerCase(), passwordHash, resolvedAdminName, 'tenant_admin']
     );
     const user = userInsert.rows[0];
 
@@ -85,25 +86,42 @@ exports.login = async (req, res) => {
   const { email, password, tenantSubdomain } = req.body;
 
   try {
-    // 1. Verify Tenant
-    const tenantRes = await db.query('SELECT * FROM tenants WHERE subdomain = $1', [tenantSubdomain]);
-    if (tenantRes.rows.length === 0) return res.status(404).json({ success: false, message: 'Tenant not found' });
-    const tenant = tenantRes.rows[0];
+    let tenant = null;
+    let user = null;
 
-    // 2. Verify User
-    const userRes = await db.query('SELECT * FROM users WHERE email = $1 AND tenant_id = $2', [email, tenant.id]);
-    if (userRes.rows.length === 0) return res.status(401).json({ success: false, message: 'Invalid credentials' });
-    const user = userRes.rows[0];
+    // 1. Check if this is a super_admin login (no subdomain or special 'system' subdomain)
+    if (!tenantSubdomain || tenantSubdomain === 'system') {
+      // Super admin login path - look for user with role super_admin and tenant_id IS NULL
+      const userRes = await db.query('SELECT * FROM users WHERE email = $1 AND tenant_id IS NULL AND role = $2', [email, 'super_admin']);
+      if (userRes.rows.length === 0) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+      user = userRes.rows[0];
+    } else {
+      // 2. Regular tenant login - Verify Tenant
+      const tenantRes = await db.query('SELECT * FROM tenants WHERE subdomain = $1', [tenantSubdomain]);
+      if (tenantRes.rows.length === 0) return res.status(404).json({ success: false, message: 'Tenant not found' });
+      tenant = tenantRes.rows[0];
 
-    // 3. Verify Password
+      // 3. Verify User belongs to tenant
+      const userRes = await db.query('SELECT * FROM users WHERE email = $1 AND tenant_id = $2', [email, tenant.id]);
+      if (userRes.rows.length === 0) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+      user = userRes.rows[0];
+    }
+
+    // 4. Verify Password
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) return res.status(401).json({ success: false, message: 'Invalid credentials' });
 
-    // 4. Generate Token
+    // 5. Generate Token
     const token = jwt.sign(
-      { userId: user.id, tenantId: tenant.id, role: user.role },
+      { userId: user.id, tenantId: tenant ? tenant.id : null, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
+    );
+
+    // 6. Audit Log for login
+    await db.query(
+      'INSERT INTO audit_logs (tenant_id, user_id, action, entity_type, entity_id) VALUES ($1, $2, $3, $4, $5)',
+      [tenant ? tenant.id : null, user.id, 'LOGIN', 'user', user.id]
     );
 
     res.json({

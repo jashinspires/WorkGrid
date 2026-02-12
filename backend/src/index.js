@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   console.log('Root route accessed');
   res.json({
-    message: 'Multi-Tenant SaaS API is running!',
+    message: 'WorkGrid API is running!',
     version: '1.0.0',
     documentation: '/docs',
     healthCheck: '/api/health',

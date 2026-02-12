@@ -1,4 +1,4 @@
-# Deployment Guide - Multi-Tenant SaaS Platform
+# Deployment Guide - WorkGrid
 
 ## Prerequisites
 

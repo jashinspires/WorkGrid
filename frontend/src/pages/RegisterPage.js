@@ -32,28 +32,28 @@ const RegisterPage = () => {
     <div className="gradient-bg">
       <div className="auth-card">
         <div className="auth-hero">
-          <p className="eyebrow">Expansion Pack</p>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Provision New Tenant.</h1>
-          <p className="subhead" style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
-            Scale your organization with an isolated instance. Choose a plan that fits your growth.
+          <p className="eyebrow">New Workspace</p>
+          <h1 style={{ fontSize: '1.75rem', marginBottom: '12px' }}>Create your workspace.</h1>
+          <p className="subhead">
+            Set up an isolated environment for your team with its own projects, members, and data.
           </p>
-          <div className="pill-list" style={{ listStyleType: 'none', padding: 0, display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '8px', marginTop: '24px', flexWrap: 'wrap' }}>
             <span className="pill">Scalable</span>
             <span className="pill">Isolated</span>
-            <span className="pill">Modern</span>
+            <span className="pill">Secure</span>
           </div>
         </div>
 
         <div className="auth-form" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
-          <div className="form-header" style={{ marginBottom: '1rem' }}>
-            <p className="eyebrow">Organization Setup</p>
-            <h2>Register Workspace</h2>
+          <div style={{ marginBottom: '20px' }}>
+            <p className="eyebrow">Setup</p>
+            <h2>Register</h2>
           </div>
 
           <form onSubmit={handleSubmit} className="form-grid">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               <label className="field">
-                <span>Tenant Name</span>
+                <span>Organization</span>
                 <input
                   type="text"
                   placeholder="Acme Inc"
@@ -75,7 +75,7 @@ const RegisterPage = () => {
             </div>
 
             <label className="field">
-              <span>Admin Full Name</span>
+              <span>Full name</span>
               <input
                 type="text"
                 placeholder="Jane Doe"
@@ -85,7 +85,7 @@ const RegisterPage = () => {
               />
             </label>
             <label className="field">
-              <span>Admin Email</span>
+              <span>Email</span>
               <input
                 type="email"
                 placeholder="admin@acme.com"
@@ -95,7 +95,7 @@ const RegisterPage = () => {
               />
             </label>
             <label className="field">
-              <span>Security Password</span>
+              <span>Password</span>
               <input
                 type="password"
                 placeholder="Create a strong password"
@@ -105,21 +105,21 @@ const RegisterPage = () => {
               />
             </label>
             <label className="field">
-              <span>Service Plan</span>
+              <span>Plan</span>
               <select
                 value={form.plan}
                 onChange={(e) => setForm({ ...form, plan: e.target.value })}
               >
-                <option value="free">Free (3 Projects)</option>
-                <option value="pro">Pro (15 Projects)</option>
-                <option value="enterprise">Enterprise (Infinity)</option>
+                <option value="free">Free — 3 projects</option>
+                <option value="pro">Pro — 15 projects</option>
+                <option value="enterprise">Enterprise — Unlimited</option>
               </select>
             </label>
-            <button type="submit" className="btn primary" style={{ marginTop: '1rem' }}>Provision Workspace</button>
+            <button type="submit" className="btn primary" style={{ marginTop: '8px', width: '100%' }}>Create workspace</button>
           </form>
 
-          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-            <Link to="/login" className="muted" style={{ fontSize: '0.9rem' }}>Already have a workspace? Sign in</Link>
+          <div style={{ marginTop: '24px', fontSize: '0.8rem', textAlign: 'center' }}>
+            <Link to="/login" style={{ color: '#e5e5e5', textDecoration: 'underline' }}>Already have a workspace? Sign in</Link>
           </div>
         </div>
       </div>

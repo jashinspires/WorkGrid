@@ -29,36 +29,36 @@ const LoginPage = () => {
     <div className="gradient-bg">
       <div className="auth-card">
         <div className="auth-hero">
-          <p className="eyebrow">Enterprise Ready</p>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Multi-Tenant Control Plane.</h1>
-          <p className="subhead" style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
-            Access your secure, isolated workspace. All data is scoped and protected at the database level.
+          <p className="eyebrow">WorkGrid</p>
+          <h1 style={{ fontSize: '1.75rem', marginBottom: '12px' }}>Welcome back.</h1>
+          <p className="subhead">
+            Sign in to access your isolated workspace. Data is scoped and protected at the database level.
           </p>
-          <div className="pill-list" style={{ listStyleType: 'none', padding: 0, display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <span className="pill">JWT v2</span>
-            <span className="pill">Postgres Isolation</span>
-            <span className="pill">RBAC Enabled</span>
+          <div style={{ display: 'flex', gap: '8px', marginTop: '24px', flexWrap: 'wrap' }}>
+            <span className="pill">JWT Auth</span>
+            <span className="pill">RBAC</span>
+            <span className="pill">Tenant Isolation</span>
           </div>
         </div>
 
         <div className="auth-form">
-          <div className="form-header" style={{ marginBottom: '2rem' }}>
+          <div style={{ marginBottom: '24px' }}>
             <p className="eyebrow">Authentication</p>
-            <h2>Tenant Login</h2>
+            <h2>Sign in</h2>
           </div>
 
           <form onSubmit={handleSubmit} className="form-grid">
             <label className="field">
-              <span>Tenant Subdomain</span>
+              <span>Subdomain</span>
               <input
                 type="text"
-                placeholder="e.g., demo"
+                placeholder="e.g. demo"
                 onChange={(e) => setForm({ ...form, subdomain: e.target.value })}
                 required
               />
             </label>
             <label className="field">
-              <span>Admin Email</span>
+              <span>Email</span>
               <input
                 type="email"
                 placeholder="you@company.com"
@@ -67,7 +67,7 @@ const LoginPage = () => {
               />
             </label>
             <label className="field">
-              <span>Master Password</span>
+              <span>Password</span>
               <input
                 type="password"
                 placeholder="••••••••"
@@ -75,18 +75,13 @@ const LoginPage = () => {
                 required
               />
             </label>
-            <button type="submit" className="btn primary" style={{ marginTop: '1rem' }}>Sign In to Workspace</button>
+            <button type="submit" className="btn primary" style={{ marginTop: '8px', width: '100%' }}>Sign in</button>
           </form>
 
-          <div className="hint" style={{ marginTop: '2rem' }}>
-            <p className="muted">
-              First time here? <Link to="/register" style={{ color: 'var(--accent)' }}>Provision new tenant</Link>
+          <div style={{ marginTop: '24px', fontSize: '0.8rem' }}>
+            <p style={{ color: '#666' }}>
+              New here? <Link to="/register" style={{ color: '#e5e5e5', textDecoration: 'underline' }}>Create a workspace</Link>
             </p>
-          </div>
-
-          <div className="hint">
-            <p className="eyebrow" style={{ fontSize: '0.7rem' }}>Demo Instance</p>
-            <p style={{ fontSize: '0.8rem' }}>Subdomain: <b>demo</b> · admin@demo.com · Demo@123</p>
           </div>
         </div>
       </div>

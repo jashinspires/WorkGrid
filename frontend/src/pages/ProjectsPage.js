@@ -3,7 +3,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
-const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5000';
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const ProjectsPage = () => {
     const [projects, setProjects] = useState([]);
@@ -56,53 +56,53 @@ const ProjectsPage = () => {
         <>
             <header className="header-actions">
                 <div>
-                    <p className="eyebrow">Project Management</p>
-                    <h1>Directory</h1>
+                    <p className="eyebrow">Projects</p>
+                    <h1>All projects</h1>
                 </div>
-                <div className="pill">Active Subdomain: {user?.tenant?.subdomain}</div>
+                <div className="pill">{user?.tenant?.subdomain}</div>
             </header>
 
             {isAdmin && (
                 <section className="panel">
-                    <p className="eyebrow">Configuration</p>
-                    <h3>Provision New Project</h3>
-                    <form onSubmit={handleCreate} className="inline-form" style={{ marginTop: '1rem', justifyContent: 'flex-start' }}>
+                    <p className="eyebrow">Create</p>
+                    <h3>New project</h3>
+                    <form onSubmit={handleCreate} className="inline-form" style={{ marginTop: '12px', justifyContent: 'flex-start' }}>
                         <input
                             type="text"
-                            placeholder="Project Name"
+                            placeholder="Project name"
                             value={form.name}
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                             required
                         />
                         <input
                             type="text"
-                            placeholder="Domain Description"
+                            placeholder="Description"
                             value={form.description}
                             onChange={(e) => setForm({ ...form, description: e.target.value })}
                         />
-                        <button type="submit" className="btn primary">Provision</button>
+                        <button type="submit" className="btn primary">Create</button>
                     </form>
                 </section>
             )}
 
             <section className="panel">
-                <p className="eyebrow">Index</p>
-                <h3>Available Resources</h3>
-                {loading ? <div className="empty">Synchronizing...</div> : projects.length === 0 ? (
-                    <div className="empty">No project instances found in this shard.</div>
+                <p className="eyebrow">Directory</p>
+                <h3>All projects</h3>
+                {loading ? <div className="empty">Loading...</div> : projects.length === 0 ? (
+                    <div className="empty">No projects yet.</div>
                 ) : (
-                    <div className="project-grid" style={{ marginTop: '1.5rem' }}>
+                    <div className="project-grid" style={{ marginTop: '20px' }}>
                         {projects.map(p => (
                             <div key={p.id} className="project-card">
                                 <div className="project-meta">
-                                    <span className="eyebrow">ID: {p.id.slice(0, 8)}</span>
+                                    <span className="eyebrow">{p.id.slice(0, 8)}</span>
                                     <span className="pill">{p.task_count || 0} tasks</span>
                                 </div>
                                 <h3>{p.name}</h3>
-                                <p className="muted">{p.description || 'No metadata provided.'}</p>
-                                <div style={{ marginTop: 'auto', paddingTop: '1rem', display: 'flex', gap: '10px' }}>
-                                    <Link to={`/projects/${p.id}`} className="btn ghost" style={{ flex: 1 }}>Manage</Link>
-                                    {isAdmin && <button onClick={() => handleDelete(p.id)} className="btn danger">Destroy</button>}
+                                <p className="muted">{p.description || 'No description.'}</p>
+                                <div style={{ marginTop: 'auto', paddingTop: '12px', display: 'flex', gap: '8px' }}>
+                                    <Link to={`/projects/${p.id}`} className="btn ghost" style={{ flex: 1 }}>Open</Link>
+                                    {isAdmin && <button onClick={() => handleDelete(p.id)} className="btn danger">Delete</button>}
                                 </div>
                             </div>
                         ))}

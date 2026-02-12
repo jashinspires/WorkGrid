@@ -37,6 +37,7 @@ exports.createTask = async (req, res) => {
 exports.getTasksByProject = async (req, res) => {
   const { projectId } = req.params;
   const { tenantId } = req.user;
+  const { search } = req.query;
 
   try {
     // Ensure project belongs to tenant
@@ -45,14 +46,20 @@ exports.getTasksByProject = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Project not found in your organization' });
     }
 
-    const tasks = await db.query(
-      `SELECT t.*, u.full_name as assignee_name
+    let query = `SELECT t.*, u.full_name as assignee_name
        FROM tasks t
        LEFT JOIN users u ON t.assigned_to = u.id
-       WHERE t.project_id = $1 AND t.tenant_id = $2
-       ORDER BY t.created_at DESC`,
-      [projectId, tenantId]
-    );
+       WHERE t.project_id = $1 AND t.tenant_id = $2`;
+    const values = [projectId, tenantId];
+
+    if (search) {
+      query += ` AND t.title ILIKE $3`;
+      values.push(`%${search}%`);
+    }
+
+    query += ` ORDER BY t.created_at DESC`;
+
+    const tasks = await db.query(query, values);
 
     res.json({ success: true, data: { tasks: tasks.rows } });
   } catch (err) {
@@ -163,7 +170,7 @@ exports.updateTaskStatus = async (req, res) => {
 
 exports.deleteTask = async (req, res) => {
   const { projectId, taskId } = req.params;
-  const { tenantId } = req.user;
+  const { tenantId, userId } = req.user;
 
   try {
     const existing = await db.query('SELECT id, project_id FROM tasks WHERE id = $1 AND tenant_id = $2', [taskId, tenantId]);

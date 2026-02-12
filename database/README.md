@@ -1,6 +1,6 @@
 # Database Migrations and Seeds
 
-This directory contains all database schema migrations and seed data for the Multi-Tenant SaaS Platform.
+This directory contains all database schema migrations and seed data for WorkGrid.
 
 ## Migration Files
 

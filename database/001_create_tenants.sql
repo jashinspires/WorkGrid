@@ -1,5 +1,5 @@
 -- 001_create_tenants.sql
--- Migration: Create tenants table for multi-tenant SaaS platform
+-- Migration: Create tenants table for WorkGrid platform
 -- This table stores organization/company information with subscription plans
 
 -- Enable UUID extension for generating unique identifiers
@@ -54,7 +54,7 @@ CREATE TRIGGER update_tenants_updated_at BEFORE UPDATE ON tenants
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Add comments for documentation
-COMMENT ON TABLE tenants IS 'Stores organization/company information for multi-tenant SaaS';
+COMMENT ON TABLE tenants IS 'Stores organization/company information for WorkGrid';
 COMMENT ON COLUMN tenants.subdomain IS 'Unique subdomain identifier for tenant (e.g., acme)';
 COMMENT ON COLUMN tenants.subscription_plan IS 'Current subscription plan: free, pro, or enterprise';
 COMMENT ON COLUMN tenants.max_users IS 'Maximum number of users allowed based on subscription plan';

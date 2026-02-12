@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
-const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5000';
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const Dashboard = () => {
   const [projects, setProjects] = useState([]);
@@ -42,7 +42,7 @@ const Dashboard = () => {
   const fetchTasks = async (projectId) => {
     setTasksLoading(true);
     try {
-      const res = await axios.get(`${API_BASE}/api/tasks/${projectId}/tasks`, { headers: authHeader() });
+      const res = await axios.get(`${API_BASE}/api/projects/${projectId}/tasks`, { headers: authHeader() });
       setTasks(res.data.data.tasks);
     } catch (err) {
       console.error(err);
@@ -55,7 +55,7 @@ const Dashboard = () => {
     e.preventDefault();
     if (!selectedProject) return alert('Select a project first');
     try {
-      await axios.post(`${API_BASE}/api/tasks/${selectedProject}/tasks`, taskForm, { headers: authHeader() });
+      await axios.post(`${API_BASE}/api/projects/${selectedProject}/tasks`, taskForm, { headers: authHeader() });
       setTaskForm({ title: '', priority: 'medium' });
       fetchTasks(selectedProject);
       fetchProjects();
@@ -70,61 +70,60 @@ const Dashboard = () => {
     <>
       <header className="header-actions">
         <div>
-          <p className="eyebrow">Project Intelligence</p>
+          <p className="eyebrow">Dashboard</p>
           <h1>Overview</h1>
         </div>
-        <div className="pill">Cloud Node: Operational</div>
       </header>
 
       <section className="stat-grid">
         <div className="stat-card">
           <p className="eyebrow">Projects</p>
           <h2>{projects.length}</h2>
-          <p className="muted">Tenant-isolated storage</p>
+          <p className="muted">Active workspaces</p>
         </div>
         <div className="stat-card">
           <p className="eyebrow">Tasks</p>
           <h2>{projects.reduce((sum, p) => sum + Number(p.task_count || 0), 0)}</h2>
-          <p className="muted">Scoped execution</p>
+          <p className="muted">Across all projects</p>
         </div>
         <div className="stat-card">
-          <p className="eyebrow">Account Health</p>
-          <h2>98%</h2>
-          <p className="muted">Uptime of tenant shard</p>
+          <p className="eyebrow">Status</p>
+          <h2>Active</h2>
+          <p className="muted">All systems normal</p>
         </div>
       </section>
 
       <section className="task-layout">
         <div className="panel">
-          <p className="eyebrow">Quick Action</p>
-          <h3>Add Rapid Task</h3>
+          <p className="eyebrow">Quick add</p>
+          <h3>New task</h3>
           {projects.length === 0 ? (
-            <div className="empty-state" style={{ padding: '1rem', border: '1px dashed var(--border)', borderRadius: 'var(--radius)', textAlign: 'center' }}>
-              <p className="muted" style={{ marginBottom: '1rem' }}>No projects available to assign tasks.</p>
-              <a href="/projects" className="btn primary small" style={{ textDecoration: 'none' }}>Create First Project</a>
+            <div className="empty-state" style={{ padding: '16px', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '8px', textAlign: 'center' }}>
+              <p className="muted" style={{ marginBottom: '12px' }}>No projects yet.</p>
+              <a href="/projects" className="btn primary small" style={{ textDecoration: 'none' }}>Create project</a>
             </div>
           ) : (
             <form onSubmit={handleTaskCreate} className="form-grid">
               <div className="field">
-                <span>Target Project</span>
+                <span>Project</span>
                 <select value={selectedProject} onChange={(e) => setSelectedProject(e.target.value)}>
                   {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
               <div className="field">
-                <span>Task Title</span>
+                <span>Title</span>
                 <input value={taskForm.title} onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })} required />
               </div>
-              <button type="submit" className="btn primary">Launch Task</button>
+              <button type="submit" className="btn primary">Add task</button>
             </form>
           )}
         </div>
 
         <div className="panel">
-          <p className="eyebrow">Live Feed</p>
-          <h3>Active Project Tasks ({tasks.length})</h3>
+          <p className="eyebrow">Recent</p>
+          <h3>Tasks ({tasks.length})</h3>
           <div className="task-list">
-            {tasksLoading ? <p>Loading...</p> : tasks.length === 0 ? <p className="muted">No work in progress.</p> : tasks.map(t => (
+            {tasksLoading ? <p>Loading...</p> : tasks.length === 0 ? <p className="muted">No tasks yet.</p> : tasks.map(t => (
               <div key={t.id} className="task-card">
                 <div className="task-meta">
                   <span className={`pill ${t.priority}`}>{t.priority}</span>

@@ -2,7 +2,7 @@
 
 ## 1. System Architecture Overview
 
-The Multi-Tenant SaaS Platform follows a three-tier architecture pattern with clear separation of concerns:
+The WorkGrid platform follows a three-tier architecture pattern with clear separation of concerns:
 
 - **Client Layer:** React-based Single Page Application (SPA)
 - **Application Layer:** Node.js/Express REST API with JWT authentication
@@ -526,7 +526,7 @@ Middleware (Auth, RBAC, Tenant Isolation)
 
 ## Conclusion
 
-This architecture provides a solid foundation for a production-grade multi-tenant SaaS platform with:
+This architecture provides a solid foundation for a production-grade multi-tenant platform with:
 
 - ✅ **Scalability:** Horizontal scaling of stateless API servers
 - ✅ **Security:** Multiple layers of tenant isolation and authentication

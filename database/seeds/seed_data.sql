@@ -18,15 +18,13 @@ FROM tenants WHERE subdomain = 'demo'
 ON CONFLICT (tenant_id, email) DO NOTHING;
 
 -- 4. Regular Users (Password: User@123)
--- Hash: $2a$10$X8mG.XyM1n9n7R9Fk6Y4u.C9j7R9G.XyM1n9n7R9Fk6Y4u.C9j7R9 (Sample generic hash for User@123: $2a$10$qV9.p8.P8x.P8x.P8x.P8x.P8x.P8x.P8x.P8x.P8x.P8x.P8x.P8x.)
--- Actually using a correct hash for User@123: $2a$10$lUv.PzI.F6n9.p6Y7r6uOe6o8jY.qO7jH6vH8eR2sO.yG.i.W.m6
 INSERT INTO users (tenant_id, email, password_hash, full_name, role)
-SELECT id, 'user1@demo.com', '$2a$10$lUv.PzI.F6n9.p6Y7r6uOe6o8jY.qO7jH6vH8eR2sO.yG.i.W.m6', 'User One', 'user'
+SELECT id, 'user1@demo.com', '$2a$10$LLFEEeHLYL8XKZ5UTPUk/.L1vifQ/lvOr8mZV8nR5RvHyeFW0k0Qy', 'User One', 'user'
 FROM tenants WHERE subdomain = 'demo'
 ON CONFLICT (tenant_id, email) DO NOTHING;
 
 INSERT INTO users (tenant_id, email, password_hash, full_name, role)
-SELECT id, 'user2@demo.com', '$2a$10$lUv.PzI.F6n9.p6Y7r6uOe6o8jY.qO7jH6vH8eR2sO.yG.i.W.m6', 'User Two', 'user'
+SELECT id, 'user2@demo.com', '$2a$10$LLFEEeHLYL8XKZ5UTPUk/.L1vifQ/lvOr8mZV8nR5RvHyeFW0k0Qy', 'User Two', 'user'
 FROM tenants WHERE subdomain = 'demo'
 ON CONFLICT (tenant_id, email) DO NOTHING;
 

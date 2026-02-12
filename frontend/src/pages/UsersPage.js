@@ -3,7 +3,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
-const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5000';
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const UsersPage = () => {
     const [users, setUsers] = useState([]);
@@ -23,7 +23,7 @@ const UsersPage = () => {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(`${API_BASE}/api/users/${tenantId}/users`, { headers: authHeader() });
+            const res = await axios.get(`${API_BASE}/api/tenants/${tenantId}/users`, { headers: authHeader() });
             setUsers(res.data.data.users);
         } catch (err) {
             console.error(err);
@@ -35,7 +35,7 @@ const UsersPage = () => {
     const handleAddUser = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`${API_BASE}/api/users/${tenantId}/users`, form, { headers: authHeader() });
+            await axios.post(`${API_BASE}/api/tenants/${tenantId}/users`, form, { headers: authHeader() });
             setForm({ email: '', fullName: '', password: '', role: 'user' });
             fetchUsers();
         } catch (err) {
@@ -57,34 +57,34 @@ const UsersPage = () => {
         <>
             <header className="header-actions">
                 <div>
-                    <p className="eyebrow">Identity & Access</p>
-                    <h1>Team Directory</h1>
+                    <p className="eyebrow">Team</p>
+                    <h1>Members</h1>
                 </div>
-                <div className="pill">Current Tenant: {currentUser?.tenant?.name}</div>
+                <div className="pill">{currentUser?.tenant?.name}</div>
             </header>
 
             {isAdmin && (
                 <section className="panel">
-                    <p className="eyebrow">Provisioning</p>
-                    <h3>Add Workspace Member</h3>
-                    <form onSubmit={handleAddUser} className="inline-form" style={{ marginTop: '1rem', justifyContent: 'flex-start' }}>
+                    <p className="eyebrow">Invite</p>
+                    <h3>Add member</h3>
+                    <form onSubmit={handleAddUser} className="inline-form" style={{ marginTop: '12px', justifyContent: 'flex-start' }}>
                         <input
                             type="text"
-                            placeholder="Full Name"
+                            placeholder="Full name"
                             value={form.fullName}
                             onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                             required
                         />
                         <input
                             type="email"
-                            placeholder="Corporate Email"
+                            placeholder="Email"
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
                             required
                         />
                         <input
                             type="password"
-                            placeholder="Secure Pass"
+                            placeholder="Password"
                             value={form.password}
                             onChange={(e) => setForm({ ...form, password: e.target.value })}
                             required
@@ -93,16 +93,16 @@ const UsersPage = () => {
                             <option value="user">User</option>
                             <option value="tenant_admin">Admin</option>
                         </select>
-                        <button type="submit" className="btn primary">Provision</button>
+                        <button type="submit" className="btn primary">Add</button>
                     </form>
                 </section>
             )}
 
             <section className="panel">
-                <p className="eyebrow">Registry</p>
-                <h3>Active Members</h3>
-                {loading ? <div className="empty">Synchronizing team...</div> : (
-                    <div className="project-grid" style={{ marginTop: '1.5rem' }}>
+                <p className="eyebrow">Directory</p>
+                <h3>All members</h3>
+                {loading ? <div className="empty">Loading...</div> : (
+                    <div className="project-grid" style={{ marginTop: '20px' }}>
                         {users.map(u => (
                             <div key={u.id} className="project-card">
                                 <div className="project-meta">
@@ -112,8 +112,8 @@ const UsersPage = () => {
                                 <h3>{u.full_name}</h3>
                                 <p className="muted">{u.email}</p>
                                 {isAdmin && u.id !== currentUser?.id && (
-                                    <div style={{ marginTop: '1rem' }}>
-                                        <button onClick={() => handleDelete(u.id)} className="btn danger" style={{ width: '100%' }}>Deauthorize</button>
+                                    <div style={{ marginTop: '12px' }}>
+                                        <button onClick={() => handleDelete(u.id)} className="btn danger" style={{ width: '100%' }}>Remove</button>
                                     </div>
                                 )}
                             </div>

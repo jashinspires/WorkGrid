@@ -1,4 +1,4 @@
-# Research Document: Multi-Tenant SaaS Platform
+# Research Document: WorkGrid
 
 ## Executive Summary
 
